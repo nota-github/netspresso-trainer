@@ -19,6 +19,8 @@ from typing import Dict, Type
 import torch
 import torch.nn as nn
 
+from .custom_act import SiLU
+
 NORM_REGISTRY: Dict[str, Type[nn.Module]] = {
     'batch_norm': nn.BatchNorm2d,
     'instance_norm': nn.InstanceNorm2d,
@@ -30,7 +32,7 @@ ACTIVATION_REGISTRY: Dict[str, Type[nn.Module]] = {
     'prelu': nn.PReLU,
     'leaky_relu': nn.LeakyReLU,
     'gelu': nn.GELU,
-    'silu': nn.SiLU,
+    'silu': SiLU,
     'swish': nn.SiLU,
     'hard_swish': nn.Hardswish,
 }
