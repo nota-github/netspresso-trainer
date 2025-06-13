@@ -3,7 +3,7 @@
 ## Install packages
 
 ```bash
-git clone https://github.com/nota-github/netspresso-trainer.git@v2-yolox-demo
+git clone --branch v2-yolox-demo https://github.com/nota-github/netspresso-trainer.git
 pip install -e .
 ```
 
