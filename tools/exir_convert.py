@@ -42,7 +42,7 @@ def parse_args():
         '-o', '--output-dir', type=str, default="exir/",
         help="Export model output directory")
     parser.add_argument(
-        '--sample-size', type=list, default=[640, 640],
+        '--sample-size', type=int, nargs=2, default=(640, 640),
         help="Input sample size")
     parser.add_argument(
         '--debug', action='store_true', help="Debug mode to check with the error message")
