@@ -61,11 +61,11 @@ if __name__ == '__main__':
     # Download coco2017 dataset
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-    train_images_download_path = Path(DOWNLOAD_DIR) / 'train2017.zip'
-    if train_images_download_path.exists():
-        print(f'Download path {train_images_download_path} already exists! download step is skipped.')
-    else:
-        torch.hub.download_url_to_file(TRAIN_IMAGES_URL, train_images_download_path)
+    # train_images_download_path = Path(DOWNLOAD_DIR) / 'train2017.zip'
+    # if train_images_download_path.exists():
+    #     print(f'Download path {train_images_download_path} already exists! download step is skipped.')
+    # else:
+    #     torch.hub.download_url_to_file(TRAIN_IMAGES_URL, train_images_download_path)
 
     valid_images_download_path = Path(DOWNLOAD_DIR) / 'val2017.zip'
     if valid_images_download_path.exists():
@@ -82,17 +82,17 @@ if __name__ == '__main__':
     coco2017_path = Path(args.dir) / 'coco2017'
     os.makedirs(coco2017_path, exist_ok=True)
 
-    # Unzip train images
-    print('Unzip training images zip file ...')
+    # # Unzip train images
+    # print('Unzip training images zip file ...')
     images_dir = coco2017_path / 'images'
-    shutil.unpack_archive(train_images_download_path, images_dir, "zip")
-    print('Rename train2017 to train')
-    try: # Remove already exists one
-        shutil.rmtree(images_dir / 'train')
-    except OSError as e:
-        print(e)
-    os.rename(images_dir / 'train2017', images_dir / 'train')
-    print('Done!')
+    # shutil.unpack_archive(train_images_download_path, images_dir, "zip")
+    # print('Rename train2017 to train')
+    # try: # Remove already exists one
+    #     shutil.rmtree(images_dir / 'train')
+    # except OSError as e:
+    #     print(e)
+    # os.rename(images_dir / 'train2017', images_dir / 'train')
+    # print('Done!')
 
     # Unzip valid images
     print('Unzip training images zip file ...')
@@ -125,32 +125,32 @@ if __name__ == '__main__':
     for item in category:
         CLASS91_LABEL_TO_NAME[item['id']] = item['name']
 
-    train_annotations = {image_info['id']: [image_info['file_name']] for image_info in train_ann_json['images']}
-    train_imgid_to_info = {info['id']: info for info in train_ann_json['images']}
-    for ann in tqdm(train_ann_json['annotations']):
-        image_id = ann['image_id']
+    # train_annotations = {image_info['id']: [image_info['file_name']] for image_info in train_ann_json['images']}
+    # train_imgid_to_info = {info['id']: info for info in train_ann_json['images']}
+    # for ann in tqdm(train_ann_json['annotations']):
+    #     image_id = ann['image_id']
         
-        category_id = ann['category_id']
-        label = CLASS80_NAME_TO_LABEL[CLASS91_LABEL_TO_NAME[category_id]]
+    #     category_id = ann['category_id']
+    #     label = CLASS80_NAME_TO_LABEL[CLASS91_LABEL_TO_NAME[category_id]]
         
-        # TODO: Support various box type e.g. xyxy
-        top_left_x, top_left_y, width, height  = ann['bbox']
-        cx, cy, w, h = txtywh2cxcywh(top_left_x, top_left_y, width, height)
-        cx, cy, w, h = cxcywh2cxcywhn(cx, cy, w, h, train_imgid_to_info[image_id]['width'], train_imgid_to_info[image_id]['height'])
+    #     # TODO: Support various box type e.g. xyxy
+    #     top_left_x, top_left_y, width, height  = ann['bbox']
+    #     cx, cy, w, h = txtywh2cxcywh(top_left_x, top_left_y, width, height)
+    #     cx, cy, w, h = cxcywh2cxcywhn(cx, cy, w, h, train_imgid_to_info[image_id]['width'], train_imgid_to_info[image_id]['height'])
 
-        instance = [label, cx, cy, w, h]
-        train_annotations[image_id].append(instance)
+    #     instance = [label, cx, cy, w, h]
+    #     train_annotations[image_id].append(instance)
 
-    for image_id, info in tqdm(train_annotations.items()):
-        file_name = info[0]
+    # for image_id, info in tqdm(train_annotations.items()):
+    #     file_name = info[0]
         
-        texts = ''
-        if len(info) != 1:
-            for line in info[1:]:
-                texts += f'{line[0]} {line[1]} {line[2]} {line[3]} {line[4]}\n'
+    #     texts = ''
+    #     if len(info) != 1:
+    #         for line in info[1:]:
+    #             texts += f'{line[0]} {line[1]} {line[2]} {line[3]} {line[4]}\n'
 
-        with open((train_label_dir / file_name).with_suffix('.txt'), 'w') as f:
-            f.write(texts)
+    #     with open((train_label_dir / file_name).with_suffix('.txt'), 'w') as f:
+    #         f.write(texts)
 
     # Reformat valid annotaion to yolo format
     print('Building valid labels ...')
