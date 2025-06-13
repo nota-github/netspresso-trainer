@@ -24,7 +24,7 @@ from loguru import logger
 from omegaconf import OmegaConf
 from torch.nn.parallel import DistributedDataParallel as DDP
 
-from .base import ClassificationModel, DetectionModel, ONNXModel, SegmentationModel, TaskModel, TFLiteModel
+from .base import ClassificationModel, DetectionModel, ONNXModel, SegmentationModel, TaskModel, TFLiteModel, EXIRXNNPACKModel
 from .registry import (
     MODEL_BACKBONE_DICT,
     MODEL_FULL_DICT,
@@ -143,5 +143,9 @@ def build_model(model_conf, num_classes, devices, distributed) -> nn.Module:
     elif model_format == 'tflite':
         assert Path(model_conf.checkpoint.path).exists()
         model = TFLiteModel(model_conf)
+    
+    elif model_format == 'exir_xnnpack':
+        assert Path(model_conf.checkpoint.path).exists()
+        model = EXIRXNNPACKModel(model_conf)
 
     return model

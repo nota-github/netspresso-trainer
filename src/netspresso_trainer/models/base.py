@@ -24,6 +24,8 @@ import torch.nn as nn
 from loguru import logger
 from omegaconf import OmegaConf
 
+from np_simulator_v2 import NPSimulator, InferenceRunnerParameters, ModelType
+
 from .utils import BackboneOutput, DetectionModelOutput, ModelOutput
 
 
@@ -275,3 +277,24 @@ class TFLiteModel:
         if x.shape[1] == 3:
             x = np.transpose(x, (0, 2, 3, 1))
         return x
+
+
+class EXIRXNNPACKModel:
+    def __init__(self, model_conf) -> None:
+        simulator = NPSimulator()
+        inference_runner_params = InferenceRunnerParameters(
+            model_type=ModelType.EXECUTORCH_XNNPACK,
+            model=model_conf.checkpoint.path,
+        )
+        self.inference_runner = simulator.load_runner(inference_runner_params)
+
+    def __call__(self, x, targets=None):
+        device = x.device
+        x = x.detach().cpu()
+        out = self.inference_runner((x, ))
+        out = [o.to(device) for o in out]
+        return ModelOutput(pred=out)
+
+    def eval(self):
+        """Set the model to evaluation mode."""
+        pass  # Do nothing
