@@ -12,8 +12,8 @@ fvcore
 safetensors
 loguru>=0.6.0
 datasets
-gradio==3.50.2
 torch_tb_profiler
 scipy
 pandas
 requests
+np-simulator-v2 @ git+https://github.com/nota-github/np_simulator_v2.git@main
