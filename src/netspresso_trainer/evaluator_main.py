@@ -29,6 +29,7 @@ from netspresso_trainer.utils.engine_utils import (
     parse_args_netspresso,
     set_arguments,
     validate_evaluation_config,
+    parse_gpu_ids,
 )
 
 
@@ -99,6 +100,29 @@ def evaluation_with_yaml_impl(gpus: Optional[Union[List, int]], data: Union[Path
         return config_summary.logging_dir
     except Exception as e:
         raise e
+
+
+def evaluation_with_yaml(
+    data: Union[Path, str],
+    augmentation: Union[Path, str],
+    model: Union[Path, str],
+    logging: Union[Path, str],
+    environment: Union[Path, str],
+    gpus: Optional[str] = None, log_level: str = LOG_LEVEL
+):
+    gpus: Union[List, int] = parse_gpu_ids(gpus)
+
+    logging_dir: Path = evaluation_with_yaml_impl(
+        gpus=gpus,
+        data=data,
+        augmentation=augmentation,
+        model=model,
+        logging=logging,
+        environment=environment,
+        log_level=log_level
+    )
+
+    return logging_dir
 
 
 def evaluation_cli() -> None:
