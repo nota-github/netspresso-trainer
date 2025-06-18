@@ -4,7 +4,7 @@ model:
   checkpoint:
     use_pretrained: True
     load_head: True
-    path: yolox-s-detection-for-demo-xnn-lower.pte
+    path: exir/model-xnn-lower.pte
     optimizer_path: ~
   freeze_backbone: False
   architecture:
