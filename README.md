@@ -19,12 +19,6 @@ python tools/exir_convert.py --config-path demo_configs/model.yaml --output-dir 
 python tools/xnnpack_lowering.py --model-path exir/model.pt2 --output-dir exir/ --sample-size 640 640
 ```
 
-## Ready evaluation dataset
-
-```bash
-python tools/open_dataset_tool/coco2017.py
-```
-
 ## Run evaluation
 
 ```bash
