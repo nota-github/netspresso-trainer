@@ -4,7 +4,7 @@ logging:
   tensorboard: true
   mlflow: false
   stdout: true
-  num_save_samples: 16 # num_save_samples should be >= 0 or None
+  num_save_samples: 50 # num_save_samples should be >= 0 or None
   model_save_options:
     save_optimizer_state: true
     save_best_only: false
