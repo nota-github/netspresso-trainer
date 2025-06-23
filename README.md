@@ -29,9 +29,9 @@ python tools/open_dataset_tool/coco2017.py
 
 ```bash
 python evaluation.py \
-    --data config/data/local/coco2017.yaml \
-    --augmentation config/augmentation/detection.yaml \
-    --model config/model/yolox/yolox-s-detection.yaml \
-    --logging config/logging.yaml \
-    --environment config/environment.yaml
+    --data demo_configs/coco2017.yaml \
+    --augmentation demo_configs/augmentation.yaml \
+    --model demo_configs/model_pte.yaml \
+    --logging demo_configs/logging.yaml \
+    --environment demo_configs/environment.yaml
 ```
