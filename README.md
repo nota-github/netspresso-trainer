@@ -10,13 +10,13 @@ pip install -e .
 ## Get YOLOX ExportedProgram
 
 ```bash
-python tools/exir_convert.py --config-path demo_configs/model.yaml --output-dir exir/ --num-classes 80 --sample-size 640 640
+python tools/exir_convert.py --config-path demo_configs/yolox_s.yaml --output-dir exir/ --num-classes 80 --sample-size 640 640
 ```
 
 ## XNNPACK lowering
 
 ```bash
-python tools/xnnpack_lowering.py --model-path exir/model.pt2 --output-dir exir/ --sample-size 640 640
+python tools/xnnpack_lowering.py --model-path exir/yolox_s.pt2 --output-dir exir/ --sample-size 640 640
 ```
 
 ## Run evaluation
@@ -25,7 +25,7 @@ python tools/xnnpack_lowering.py --model-path exir/model.pt2 --output-dir exir/ 
 python evaluation.py \
     --data demo_configs/coco2017.yaml \
     --augmentation demo_configs/augmentation.yaml \
-    --model demo_configs/model_pte.yaml \
+    --model demo_configs/yolox_s_pte.yaml \
     --logging demo_configs/logging.yaml \
     --environment demo_configs/environment.yaml
 ```
