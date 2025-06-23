@@ -9,6 +9,9 @@ pip install -e .
 
 ## Get YOLOX ExportedProgram
 
+Export with SiLU separated into Sigmoid + Mul version
+ - https://github.com/nota-github/netspresso-trainer/blob/2e0ffd3abf71b89f23f045b3288b2856c722dc68/src/netspresso_trainer/models/op/custom_act.py#L22-L56
+
 ```bash
 python tools/exir_convert.py --config-path demo_configs/yolox_s.yaml --output-dir exir/ --num-classes 80 --sample-size 640 640
 ```
