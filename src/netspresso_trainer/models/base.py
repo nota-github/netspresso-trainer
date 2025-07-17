@@ -275,3 +275,42 @@ class TFLiteModel:
         if x.shape[1] == 3:
             x = np.transpose(x, (0, 2, 3, 1))
         return x
+
+
+class ExecuTorchModel:
+    def __init__(self, model_conf) -> None:
+        self.model = torch.export.load(model_conf.checkpoint.path)
+
+    def __call__(self, x, targets=None):
+        # ExecuTorch runs on CPU
+        device = x.device
+        x = x.detach().cpu()
+        output = self.model.module()(x)
+
+        output, _ = torch._export.pytree.tree_flatten(output)
+        output = [o.to(device) for o in output]
+        return self.model.module()._out_spec.unflatten(output)
+
+    def eval(self):
+        pass
+
+
+class ExecuTorchXNNPACKModel:
+    def __init__(self, model_conf) -> None:
+        from executorch.runtime import Method, Program, Runtime
+
+        program = Runtime.get().load_program(model_conf.checkpoint.path)
+        self.model = program.load_method("forward")
+
+    def __call__(self, x, targets=None):
+        device = x.device
+        x = x.detach().cpu()
+        out = self.model.execute((x, ))
+        out = [o.to(device) for o in out]
+        if len(out) == 1: # Only detection return list output in this repo
+            out = out[0]
+        return ModelOutput(pred=out)
+
+    def eval(self):
+        """Set the model to evaluation mode."""
+        pass  # Do nothing

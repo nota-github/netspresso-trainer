@@ -279,6 +279,10 @@ def get_model_format(model_conf: omegaconf.DictConfig):
         return 'onnx'
     elif ext == '.tflite':
         return 'tflite'
+    elif ext == '.pt2':
+        return 'executorch'
+    elif ext == '.pte':
+        return 'executorch_edge_lowered'
     else:
         raise ValueError(f"Unsupported model format: {model_conf.checkpoint.path}")
 
