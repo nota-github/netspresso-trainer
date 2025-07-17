@@ -74,7 +74,7 @@ class DistributedEvalSampler(Sampler):
         ...     train(loader)
     """
 
-    def __init__(self, dataset, num_replicas=None, rank=None, shuffle=False, seed=0):
+    def __init__(self, dataset, batch_size, num_replicas=None, rank=None, shuffle=False, seed=0):
         if num_replicas is None:
             if not dist.is_available():
                 raise RuntimeError("Requires distributed package to be available")
@@ -94,6 +94,7 @@ class DistributedEvalSampler(Sampler):
 
         self.shuffle = shuffle
         self.seed = seed
+        self.batch_size = batch_size
 
     def __iter__(self):
         if self.shuffle:
@@ -109,6 +110,7 @@ class DistributedEvalSampler(Sampler):
         # indices += indices[:(self.total_size - len(indices))]
         # assert len(indices) == self.total_size
         indices += [-1 for _ in range(self.total_size - len(indices))]
+        indices += [-1 for _ in range(self.batch_size - (len(indices) % self.batch_size))]  # pad to batch size
 
         # subsample
         indices = indices[self.rank:self.total_size:self.num_replicas]

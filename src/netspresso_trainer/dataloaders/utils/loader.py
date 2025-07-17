@@ -107,7 +107,7 @@ def create_loader(
     if is_training:
         sampler = torch.utils.data.distributed.DistributedSampler(dataset, num_replicas=world_size, rank=rank, drop_last=True)
     else:
-        sampler = DistributedEvalSampler(dataset, num_replicas=world_size, rank=rank)
+        sampler = DistributedEvalSampler(dataset, num_replicas=world_size, rank=rank, batch_size=batch_size)
 
 
     loader_args = {
