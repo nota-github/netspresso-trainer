@@ -27,22 +27,21 @@ from netspresso_trainer.utils.exir import save_exir
 from omegaconf import OmegaConf
 
 
-
-TEMP_NUM_CLASSES = 80
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description="Parser for NetsPresso Export conversion")
 
     parser.add_argument(
-        '-c', '--config-path', type=str, default="config/model/yolox/yolox-s-detection.yaml",
+        '-c', '--config-path', type=str, default="config/yolox-s-detection/model.yaml",
         help="Model config path")
     parser.add_argument(
-        '-n', '--num-classes', type=int, default=TEMP_NUM_CLASSES,
+        '-n', '--num-classes', type=int, default=80,
         help="Number of classes")
     parser.add_argument(
         '-o', '--output-dir', type=str, default="exir/",
         help="Export model output directory")
+    parser.add_argument(
+        '--batch-size', type=int, default=8,
+        help="Batch size for the model")
     parser.add_argument(
         '--sample-size', type=int, nargs=2, default=(640, 640),
         help="Input sample size")
@@ -75,9 +74,9 @@ if __name__ == '__main__':
             config.single_task_model = is_single_task_model(config)
             torch_model: nn.Module = build_model(config, num_classes=args.num_classes, devices=torch.device("cpu"), distributed=False)
             torch_model.eval()
-            sample_input = torch.randn(1, 3, *args.sample_size)
+            sample_input = torch.randn(args.batch_size, 3, *args.sample_size)
             save_exir(torch_model,
-                      f=Path(args.output_dir) / f"{model_config_path.stem}.exir",
+                      f=Path(args.output_dir) / f"{model_config_path.stem}.pt2",
                       sample_input=sample_input)
             print("Success!")
         except KeyboardInterrupt:
