@@ -90,6 +90,11 @@ class DistributedEvalSampler(Sampler):
         # self.num_samples = int(math.ceil(len(self.dataset) * 1.0 / self.num_replicas))
         # self.total_size = self.num_samples * self.num_replicas
         self.num_samples = math.ceil(len(self.dataset) / self.num_replicas)             # true value without extra samples
+        
+        # Pad num_samples to make it divisible by batch_size
+        if self.num_samples % batch_size != 0:
+            self.num_samples = math.ceil(self.num_samples / batch_size) * batch_size
+        
         self.total_size = self.num_samples * self.num_replicas
 
         self.shuffle = shuffle
@@ -105,18 +110,22 @@ class DistributedEvalSampler(Sampler):
         else:
             indices = list(range(len(self.dataset)))
 
-
-        # # add extra samples to make it evenly divisible
-        # indices += indices[:(self.total_size - len(indices))]
-        # assert len(indices) == self.total_size
+        # Pad indices to make total_size
         indices += [-1 for _ in range(self.total_size - len(indices))]
-        indices += [-1 for _ in range(self.batch_size - (len(indices) % self.batch_size))]  # pad to batch size
 
-        # subsample
-        indices = indices[self.rank:self.total_size:self.num_replicas]
-        assert len(indices) == self.num_samples
+        # subsample for this rank
+        rank_indices = indices[self.rank:self.total_size:self.num_replicas]
+        
+        # Ensure the number of samples for this rank is divisible by batch_size
+        # by padding with -1 (which should be handled by the dataloader/collate_fn)
+        current_samples = len(rank_indices)
+        if current_samples % self.batch_size != 0:
+            padding_needed = self.batch_size - (current_samples % self.batch_size)
+            rank_indices.extend([-1] * padding_needed)
+        
+        assert len(rank_indices) == self.num_samples
 
-        return iter(indices)
+        return iter(rank_indices)
 
     def __len__(self):
         return self.num_samples
