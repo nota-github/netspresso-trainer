@@ -52,38 +52,27 @@ def parse_args():
     return args
 
 
-def get_model_config_path_list(config_path_or_dir: Path) -> List[Path]:
-    if config_path_or_dir.is_dir():
-        config_dir = config_path_or_dir
-        return sorted(chain(config_dir.glob("*.yaml"), config_dir.glob("*.yml")))
-    config_path = config_path_or_dir
-    return [config_path]
-
-
 if __name__ == '__main__':
     args = parse_args()
-
-    config_path_list = get_model_config_path_list(Path(args.config_path))
     os.makedirs(args.output_dir, exist_ok=True)
 
-    for model_config_path in config_path_list:
-        try:
-            print(f"Export conversion for ({model_config_path})..... ", end='', flush=True)
-            config = OmegaConf.load(model_config_path)
-            config = config.model
-            config.single_task_model = is_single_task_model(config)
-            torch_model: nn.Module = build_model(config, num_classes=args.num_classes, devices=torch.device("cpu"), distributed=False)
-            torch_model.eval()
-            sample_input = torch.randn(args.batch_size, 3, *args.sample_size)
-            save_exir(torch_model,
-                      f=Path(args.output_dir) / f"{model_config_path.stem}.pt2",
-                      sample_input=sample_input)
-            print("Success!")
-        except KeyboardInterrupt:
-            print("")
-            break
-        except Exception as e:
-            print("Failed!")
-            if args.debug:
-                raise e
-            print(e)
+    model_config_path = Path(args.config_path)
+    try:
+        print(f"Export conversion for ({model_config_path})..... ", end='', flush=True)
+        config = OmegaConf.load(model_config_path)
+        config = config.model
+        config.single_task_model = is_single_task_model(config)
+        torch_model: nn.Module = build_model(config, num_classes=args.num_classes, devices=torch.device("cpu"), distributed=False)
+        torch_model.eval()
+        sample_input = torch.randn(args.batch_size, 3, *args.sample_size)
+        save_exir(torch_model,
+                    f=Path(args.output_dir) / f"{model_config_path.stem}.pt2",
+                    sample_input=sample_input)
+        print("Success!")
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt!")
+    except Exception as e:
+        print("Failed!")
+        if args.debug:
+            raise e
+        print(e)
