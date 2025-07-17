@@ -1,4 +1,4 @@
-torch>=2.0.1
+torch>=2.7.0
 torchvision
 onnx
 onnxruntime
@@ -17,3 +17,4 @@ torch_tb_profiler
 scipy
 pandas
 requests
+executorch==0.6.0
