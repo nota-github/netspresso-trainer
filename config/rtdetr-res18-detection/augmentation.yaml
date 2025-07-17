@@ -1,0 +1,16 @@
+augmentation:
+  train: ~
+  inference:
+    - 
+      name: resize
+      size: [640, 640]
+      interpolation: bilinear
+      max_size: ~
+      resize_criteria: ~
+    - 
+      name: pad
+      size: 640
+      fill: 0
+    -
+      name: totensor
+      pixel_range: 1.0

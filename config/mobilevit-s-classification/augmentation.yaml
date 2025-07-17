@@ -1,0 +1,15 @@
+augmentation:
+  train: ~
+  inference:
+    - 
+      name: resize
+      size: [288, 288]
+      interpolation: bilinear
+      max_size: ~
+      resize_criteria: ~
+    - 
+      name: centercrop
+      size: 256
+    -
+      name: totensor
+      pixel_range: 1.0
