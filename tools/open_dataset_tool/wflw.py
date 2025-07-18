@@ -21,6 +21,7 @@ import tarfile
 import shutil
 import json
 
+import gdown
 import cv2
 import numpy as np
 import pandas as pd
@@ -29,7 +30,7 @@ from tqdm import tqdm
 
 DEFAULT_DATA_DIR = './data'
 DOWNLOAD_DIR = './data/download'
-WFLW_IMAGES_URL = 'https://drive.usercontent.google.com/download?id=1hzBd48JIdWTJSsATBEB_eFVvPL1bx6UC&export=download&authuser=1&confirm=t&uuid=a62cb82a-66a0-498c-b568-5b1955f3926d&at=APZUnTX3W3OXP2Y2kHd4OpGltbjL%3A1714472372882'
+WFLW_IMAGES_URL = 'https://drive.google.com/uc?id=1hzBd48JIdWTJSsATBEB_eFVvPL1bx6UC'
 WFLW_ANNOTATIONS_URL = 'https://wywu.github.io/projects/LAB/support/WFLW_annotations.tar.gz'
 KEYPOINT_INFO = {
         0: dict(name='kpt-0', id=0, color=[255, 0, 0], type='', swap='kpt-32'),
@@ -152,7 +153,7 @@ if __name__ == '__main__':
     if download_path.exists():
         print(f'Download path {download_path} already exists! download step is skipped.')
     else:
-        torch.hub.download_url_to_file(WFLW_IMAGES_URL, download_path)
+        gdown.download(WFLW_IMAGES_URL, str(download_path), quiet=False)
 
     download_path = Path(DOWNLOAD_DIR) / 'WFLW_annotations.tar.gz'
     if download_path.exists():
