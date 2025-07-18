@@ -40,7 +40,7 @@ def parse_args():
         '-o', '--output-dir', type=str, default="exir/",
         help="Export model output directory")
     parser.add_argument(
-        '--batch-size', type=int, default=8,
+        '--batch-size', type=int, default=1,
         help="Batch size for the model")
     parser.add_argument(
         '--sample-size', type=int, nargs=2, default=(640, 640),
