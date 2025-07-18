@@ -92,7 +92,7 @@ class SegmentationProcessor(BaseTaskProcessor):
         target = {'target': labels}
 
         if 'edges' in batch:
-            bd_gt = batch['edges']
+            bd_gt = torch.stack(batch['edges'], dim=0)
             target['bd_gt'] = bd_gt.to(self.devices)
 
         out = eval_model(images)
