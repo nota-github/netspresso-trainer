@@ -15,13 +15,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Parser for XNNPACK lowering")
     parser.add_argument("--model-path", type=str, required=True, help="Model path")
     parser.add_argument("--output-dir", type=str, required=True, help="Output directory")
-    parser.add_argument("--sample-size", type=int, nargs=2, default=(640, 640), help="Sample size")
 
     args = parser.parse_args()
     return args
 
 if __name__ == "__main__":
     args = parse_args()
+    print(args.model_path   )
 
     os.makedirs(args.output_dir, exist_ok=True)
 
