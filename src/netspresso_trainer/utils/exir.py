@@ -31,6 +31,6 @@ def save_exir(model: nn.Module, f: Union[str, Path], sample_input: Tensor):
         logger.warning("Current torch version does not support torch.export. Please upgrade torch.")
         return
     sample_input = sample_input.to(get_device(model))
-    exported_program = torch.export.export(model, (sample_input, ))
+    exported_program = torch.export.export_for_inference(model, (sample_input, ))
     torch.export.save(exported_program, f)
     return exported_program
