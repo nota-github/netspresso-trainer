@@ -3,13 +3,13 @@ augmentation:
   inference:
     - 
       name: resize
-      size: [256, 256]
+      size: [320, 320]
       interpolation: bilinear
       max_size: ~
       resize_criteria: ~
     - 
       name: centercrop
-      size: 224
+      size: 256
     -
       name: totensor
       pixel_range: 1.0

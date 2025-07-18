@@ -9,7 +9,7 @@ logging:
     save_optimizer_state: true
     save_best_only: false
     best_model_criterion: loss # metric
-    sample_input_size: [224, 224] # Used for flops and onnx export
+    sample_input_size: [384, 384] # Used for flops and onnx export
     onnx_export_opset: 17
     validation_epoch: &validation_epoch 10
     save_checkpoint_epoch: *validation_epoch  # Multiplier of `validation_epoch`.
